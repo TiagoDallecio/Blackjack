@@ -1,68 +1,117 @@
-package Blackjack;
+
 import java.util.Scanner;
 public class BlackjackTest {
 
     public static void main(String[] args)
     {
 
-        int stop = 0;
-        int cont = 2;
-        Card hand[] =  new Card[6];
-
+        int stop;
+        int cont;
+        Card hand[][] =  new Card[7][7];
+        int vencedor = 0;
+        int vencedorindex = 0;
         
        DeckOfCards deck = new DeckOfCards();
        deck.shuffle();
-       
-        for(int i=0;i<=1;i++)
-        {
-            hand[i] = deck.dealCard();
-            
-        }
         
         System.out.println("Digite o numero de jogadores: ");
         Scanner number = new Scanner(System.in);
-       
-      
+        int num = number.nextInt();
+        
+        Blackjack players[] = new Blackjack[num+1];
 
-        Blackjack jogador1 = new Blackjack(0,hand);
-        for(int i=0;i<=1;i++)
+        for(int i=1;i<=num;i++)
         {
-            jogador1.setScore(hand, i);
-        }
+            players[i] = new Blackjack(0, hand[i]); 
 
-        System.out.printf("A mão do jogador vale: %d%n",jogador1.getScore());
-        System.out.print("Cartas possuídas: ");
-        for(int i=0;i<2;i++)
-        {
-            System.out.printf("%n%s",jogador1.getCard(i));
-        }
-
-        while(jogador1.getScore() < 21 || stop == 0)
-        {
-            System.out.println("Deseja receber outra carta?%n s ou n");
-            Scanner resp = new Scanner(System.in);
-            String resps = resp.nextLine();
-            
-            if(resps == "s")
+            for(int j=0;j<=1;j++)
             {
-                jogador1.hand[cont] = deck.dealCard();
-                System.out.printf("A mão do jogador vale: %d%n",jogador1.getScore());
-                System.out.print("Cartas possuídas: ");
-
-                for(int i=3;i<jogador1.hand.length;i++)
-                {
-                    System.out.printf("%n%s",jogador1.getCard(i));
-                }
-                cont++;
-            }
-
-            else
-            {
-                stop = 1;
-            }
-
+                hand[i][j] = deck.dealCard();
+                players[i].setScore(hand, i, j);
+            }  
         }
 
-    }
+        for(int i = 1; i<=num; i++)
+        {
+            System.out.printf("%n%nA mão do jogador %d vale: %n%n%d%n",i,players[i].getScore());
+            System.out.printf("%nCartas do jogador %d: ",i);
+            for(int j=0;j<2;j++)
+            {
+                System.out.printf("%n%n%s",players[i].getCard(j));
+            }
+            System.out.printf("%n%n%n");
+        }
     
+        
+        for(int i=1;i<=num;i++)
+        {
+            cont = 2;
+            stop = 0;
+
+            while(stop == 0)
+            {
+                if(players[i].getScore() == 21)
+                {
+                    System.out.printf("%n%nO jogador possui um Blackjack!");
+                    stop = 1;
+                }
+
+                if(players[i].getScore() < 21)
+                {
+
+                    System.out.printf("%n%nO jogador %d deseja receber outra carta?", i);
+                    System.out.printf("%nNúmero de pontos: %d",players[i].getScore());
+                    System.out.printf("%ns ou n: ");
+                    Scanner resp = new Scanner(System.in);
+                    char resps = resp.next().charAt(0);
+            
+                    if(resps == 's')
+                    {
+                        hand[i][cont] = deck.dealCard();
+                        players[i].setCard(hand[i][cont],cont);
+                        players[i].setScore(hand, i, cont);
+                        System.out.printf("%nA mão do jogador vale: %d%n",players[i].getScore());
+                        System.out.print("Cartas possuídas: ");
+
+                        for(int j=0;j<=cont;j++)
+                        {
+                            System.out.printf("%n%n%s",players[i].getCard(j));
+                        }
+
+                        cont++;
+                    }
+
+                    if(resps == 'n')
+                    {
+                        System.out.println("O jogador não quer mais cartas.");
+                        stop = 1;
+                    }
+            }
+                if(players[i].getScore()>21)
+                {
+                    System.out.printf("%n%nO jogador estourou!%n%n");
+                    players[i].zeroScore();
+                    stop = 1;
+                }
+        
+            }
+
+        }
+        
+        for(int i = 1; i<=num; i++)
+        {
+            if(players[i].getScore() > vencedor)
+            {
+                vencedor = players[i].getScore();
+                vencedorindex = i;
+            }
+        }
+
+        
+        System.out.printf("%n%n%n O vencedor é jogador %d! %n %d pontos!%n%n",vencedorindex,vencedor);
+        
+    }
+
 }
+
+

@@ -1,9 +1,8 @@
-package Blackjack;
 
 public class Blackjack {
 
     private int score;
-    private Card[] cards;
+    private Card[] cards = new Card[7];
     private Card dealc;
     private String faces;
     private int qtd = 0;
@@ -41,13 +40,19 @@ public class Blackjack {
                
                 return cards[i];
             }
-            
 
+            public Card setCard(Card hand, int k)
+            {
 
-            public int setScore(Card[] dealc,int i)
+                cards[k] = hand;
+
+                return cards[k];
+            }
+
+            public int setScore(Card[][] dealc,int i,int j)
             {
                 
-                switch(dealc[i].face.toString())
+                switch(dealc[i][j].face.toString())
                 {
                     case "Ace":
                         if(score <= 10)
@@ -112,6 +117,13 @@ public class Blackjack {
 
                 }
                 return score;             
+            }
+
+            public int zeroScore()
+            {
+                score = 0;
+                
+                return score;
             }
     
 }

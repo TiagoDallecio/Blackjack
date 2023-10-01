@@ -1,4 +1,4 @@
-package Blackjack;
+
 public class DeckOfCardsTest
 {
    // execute application

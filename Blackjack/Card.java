@@ -1,4 +1,4 @@
-package Blackjack;
+
 public class Card 
 {
    public final String face; // face of card ("Ace", "Deuce", ...)
